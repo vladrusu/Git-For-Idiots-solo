@@ -32,21 +32,41 @@ all() {
     echo "    all             - Shows this list of commands."
 }
 
-# Create a new repo and automatically save as v1.
+# Create a new repo and automatically save as v1. (IMPROVED AND MORE ROBUST)
 create() {
   if [ -z "$1" ]; then echo "Usage: create \"project-name\""; return 1; fi
+  
+  # Initialize git locally if it's not already a repo
   if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     echo "Initializing new Git project with a 'main' branch..."; git init -b main
   fi
+  
+  # Create an initial commit if one doesn't exist
   if ! git rev-parse --verify HEAD > /dev/null 2>&1; then
     echo "No versions found. Creating initial version v1...";
     git add .; git commit --allow-empty -m "release: v1"; git tag -a "v1" -m "release: v1"
   fi
-  echo "Creating private GitHub project '$1' and pushing..."
-  if gh repo create "$1" --private --source=. --push -y; then
+
+  echo "Creating private GitHub project '$1'..."
+  # STEP 1: Create the repo on GitHub but DO NOT push immediately.
+  # The --source=. flag automatically sets up the remote URL for you.
+  if ! gh repo create "$1" --private --source=. -y; then
+      echo "❌ Error: Failed to create repository on GitHub."
+      echo "A project with this name might already exist, or there could be an issue with your GitHub CLI authentication."
+      return 1
+  fi
+
+  echo "Syncing your local project with GitHub..."
+  # STEP 2: Push the code in a separate, more reliable step.
+  # The '--set-upstream' flag links your local 'main' branch to the remote one for future pushes.
+  if git push --set-upstream origin main --tags; then
+    # Dynamically get the logged-in user's name for the URL
+    GITHUB_USER=$(gh api user -q .login)
     echo "✅ Success! Project '$1' is live on GitHub as v1."
+    echo "🔗 URL: https://github.com/$GITHUB_USER/$1"
   else
-    echo "❌ Error creating project on GitHub. A project with this name might already exist."
+    echo "❌ Error: The GitHub project was created, but your files could not be uploaded."
+    echo "💡 Please check your internet connection and try running: push \"Initial commit\""
   fi
 }
 
