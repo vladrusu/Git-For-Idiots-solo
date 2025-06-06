@@ -1,6 +1,7 @@
 # Git-For-Idiots (solo)
 
 Many people are overwhelmed by Git's complexity. I am not here to judge that.
+
 However, having online backups and version control is still a major nice-to-have, especially when working with CLI AI agents like Claude Code or conducting "vibe coding".
 
 That's why this repository breaks down the whole Git functionality to **four basic commands** which allow full Git use including rollbacks and version management.
