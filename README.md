@@ -1,8 +1,5 @@
 # Git-For-Idiots (solo)
 
-[![Watch the video](https://img.youtube.com/vi/Elf3-Zhw_c0/0.jpg)](https://youtu.be/Elf3-Zhw_c0)
-
-
 Many people are overwhelmed by Git's complexity. I am not here to judge that.
 
 However, having online backups and version control is still a major nice-to-have, especially when working with CLI AI agents like Claude Code or conducting "vibe coding".
@@ -12,12 +9,19 @@ That's why this repository breaks down the whole Git functionality to **four bas
 Please be aware that this is **for solo projects only** on macOS, and please also be aware that **every experienced coder will disrespect you for using this**. 
 However, I still love to make things as simple as they can be, and this repository achieves exactly that.
 
+
+
 ## Install
 Run this in your terminal:
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/AlexSchardin/Git-For-Idiots-solo/main/install.sh)"
 ```
 Then, close and reopen your terminal.
+
+
+
+[![Watch the video](https://img.youtube.com/vi/Elf3-Zhw_c0/0.jpg)](https://youtu.be/Elf3-Zhw_c0)
+
 
 ## Basic Commands
 | Command | Description |
