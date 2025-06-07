@@ -1,5 +1,8 @@
 # Git-For-Idiots (solo)
 
+[![Watch the video](https://img.youtube.com/vi/Elf3-Zhw_c0/0.jpg)](https://youtu.be/Elf3-Zhw_c0)
+
+
 Many people are overwhelmed by Git's complexity. I am not here to judge that.
 
 However, having online backups and version control is still a major nice-to-have, especially when working with CLI AI agents like Claude Code or conducting "vibe coding".
