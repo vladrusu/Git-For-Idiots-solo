@@ -19,10 +19,6 @@ Run this in your terminal:
 Then, close and reopen your terminal.
 
 
-
-[![Watch the video](https://img.youtube.com/vi/Elf3-Zhw_c0/0.jpg)](https://youtu.be/Elf3-Zhw_c0)
-
-
 ## Basic Commands
 | Command | Description |
 |---------|-------------|
