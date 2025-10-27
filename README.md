@@ -14,7 +14,7 @@ However, I still love to make things as simple as they can be, and this reposito
 ## Install
 Run this in your terminal:
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/AlexSchardin/Git-For-Idiots-solo/main/install.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/vladrusu/Git-For-Idiots-solo/main/install.sh)"
 ```
 Then, close and reopen your terminal.
 
