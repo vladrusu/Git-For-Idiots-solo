@@ -120,7 +120,7 @@ rollback() {
 versions() {
   _check_if_git_repo || return 1
   echo "--- Available Versions (Newest First) ---"
-  noglob git for-each-ref --sort=-creatordate --format='%(if)%(HEAD)%(then)*%(else) %(end) %(color:yellow)%-10(refname:short)%(color:reset) | %(color:blue)%(creatordate:iso)%(color:reset) | %(contents:subject)' refs/tags
+  git for-each-ref --sort=-creatordate --format='%(if)%(HEAD)%(then)*%(else) %(end) %(color:yellow)%(refname:short)%(color:reset) | %(color:blue)%(creatordate:iso)%(color:reset) | %(contents:subject)' refs/tags
 }
 
 # The SAFE mirror command. Now works for private repos.
