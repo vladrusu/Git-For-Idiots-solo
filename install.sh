@@ -6,7 +6,7 @@
 
 # --- Configuration ---
 # This URL now correctly points to YOUR repository.
-REPO_URL="https://raw.githubusercontent.com/vladrusu/Git-For-Idiots-solo/refs/heads/main/git-for-idiots.sh"
+REPO_URL="https://raw.githubusercontent.com/vladrusu/Git-For-Idiots-solo/main/git-for-idiots.sh"
 INSTALL_DIR="$HOME/.git-for-idiots"
 SCRIPT_PATH="$INSTALL_DIR/git-for-idiots.sh"
 
