@@ -73,13 +73,38 @@ create() {
 # Push changes with an automatic version tag and optional message.
 push() {
   _check_if_git_repo || return 1
+  
+  # Check GitHub authentication before attempting push
+  if ! gh auth status > /dev/null 2>&1; then
+    echo "❌ Error: You are not logged in to GitHub."
+    echo "💡 To log in, run: gh auth login"
+    return 1
+  fi
+  
+  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  
   git add .
   if git diff --cached --quiet; then
-    latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "not versioned yet")
-    echo "Repository at $latest_tag. No changes to save. Everything is up to date."
+    # No new changes to commit, but check if there are unpushed commits
+    git fetch origin "$CURRENT_BRANCH" 2>/dev/null
+    LOCAL_COMMIT=$(git rev-parse HEAD 2>/dev/null)
+    REMOTE_COMMIT=$(git rev-parse origin/"$CURRENT_BRANCH" 2>/dev/null)
+    
+    if [ "$LOCAL_COMMIT" != "$REMOTE_COMMIT" ] && [ -n "$LOCAL_COMMIT" ]; then
+      echo "No new changes to commit, but syncing existing commits to GitHub..."
+      if command git push origin "$CURRENT_BRANCH" --tags; then
+        latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "latest version")
+        echo "✅ Successfully synced to GitHub at $latest_tag"
+      else
+        echo "❌ Sync failed. Check your internet connection or GitHub repository settings."
+      fi
+    else
+      latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "not versioned yet")
+      echo "Repository at $latest_tag. No changes to save. Everything is up to date."
+    fi
     return 0
   fi
-  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  
   latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0")
   new_version=$(( ${latest_tag#v} + 1 )); new_tag="v$new_version"
   COMMIT_MSG=$([ -z "$*" ] && echo "release: $new_tag" || echo "$new_tag: $*")
@@ -88,13 +113,21 @@ push() {
   if command git push origin "$CURRENT_BRANCH" --tags; then
     echo "✅ Success! Your new version is: $new_tag"
   else
-    echo "❌ Push failed. Check your internet connection."
+    echo "❌ Push failed. Check your internet connection or GitHub repository settings."
   fi
 }
 
 # Rollback by creating a NEW version.
 rollback() {
   _check_if_git_repo || return 1
+  
+  # Check GitHub authentication before attempting push
+  if ! gh auth status > /dev/null 2>&1; then
+    echo "❌ Error: You are not logged in to GitHub."
+    echo "💡 To log in, run: gh auth login"
+    return 1
+  fi
+  
   if [ -z "$1" ]; then echo "Usage: rollback <version_to_go_back_to> (e.g., rollback v5)"; return 1; fi
   TARGET_TAG="$1"
   if ! git rev-parse --verify "$TARGET_TAG" > /dev/null 2>&1; then
@@ -112,15 +145,15 @@ rollback() {
   if command git push origin main --tags; then
     echo "✅ Rollback complete. Created new version $new_tag reflecting the old state."
   else
-    echo "❌ Rollback failed. Check your internet connection."
+    echo "❌ Rollback failed. Check your internet connection or GitHub repository settings."
   fi
 }
 
-# Show all available versions (Clean, Formatted & Zsh-Safe).
+# Show all available versions.
 versions() {
   _check_if_git_repo || return 1
   echo "--- Available Versions (Newest First) ---"
-  git for-each-ref --sort=-creatordate --format='%(if)%(HEAD)%(then)*%(else) %(end) %(color:yellow)%(refname:short)%(color:reset) | %(color:blue)%(creatordate:iso)%(color:reset) | %(contents:subject)' refs/tags
+  git for-each-ref --sort=-creatordate --format='%(if)%(HEAD)%(then)*%(else) %(end) %(color:yellow)%(align:right,8)%(refname:short)%(end)%(color:reset) | %(color:blue)%(creatordate:iso)%(color:reset) | %(contents:subject)' refs/tags
 }
 
 # The SAFE mirror command. Now works for private repos.
